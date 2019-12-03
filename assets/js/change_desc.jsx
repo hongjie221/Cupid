@@ -27,7 +27,7 @@ class ChangeDesc extends React.Component {
       type: "SHOW_PROFILE",
       data: data
     });
-    console.log(data);
+    
   }
 
   render() {

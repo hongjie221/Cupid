@@ -18,7 +18,7 @@ defmodule CupidWeb.InterestsController do
   def create(conn, %{"interests" => interests_params}) do
     tag_ids = Map.get(interests_params, "ids")
     interest_params = Enum.map(tag_ids, fn x -> %{tag_id: x} |> Map.put(:user_id, conn.assigns[:current_user].id) end)
-    IO.inspect(interest_params)
+
     Enum.map(interest_params, fn x -> Interest.create_interests(x) end)
     render(conn, "success.json", interests: interest_params)
 
@@ -62,10 +62,7 @@ defmodule CupidWeb.InterestsController do
     # get the gender of current user
     current_user_gender = conn.assigns[:current_user].gender
     # get the location based on Lat and Lon through Google Geocode api
-    IO.inspect "----------lan----------------lon"
-    IO.inspect params
-    IO.inspect lan
-    IO.inspect lon
+
 
     users_near_by = if lon !== 0 and lan !== 0 do
       addr = GeocodeApi.getLocation(%{:latitude => lan, :longitude => lon})
@@ -82,10 +79,7 @@ defmodule CupidWeb.InterestsController do
     users_same_interests = users_same_interests |> Enum.filter(fn id -> Users.get_user!(id).gender !== current_user_gender end)
     users_liked = Likes.get_likes_by_like_from_id(current_user_id) |> Enum.map(fn like -> like.like_to_id end)
     users_matched = Matches.list_user_matches(current_user_id)
-    IO.inspect users_near_by
-    IO.inspect users_same_interests
-    IO.inspect users_liked
-    IO.inspect users_matched
+
     # use parentheses to ensure the right order
     recommended_users = (Enum.uniq(users_same_interests ++ users_near_by)  -- users_liked) -- users_matched |> Enum.map(fn x -> Users.get_user!(x)end)
     render(conn, "browse.json", match_user: recommended_users)

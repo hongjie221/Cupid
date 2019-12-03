@@ -17,7 +17,7 @@ defmodule CupidWeb.Notification do
     end
 
     defp notify(user_id, msg, type, headline, content) do
-        IO.inspect "-------------------Broadcast---------"
+
         CupidWeb.Endpoint.broadcast!("notification:" <> to_string(user_id), msg,
             %{type: type, headline: headline, message: content})
     end

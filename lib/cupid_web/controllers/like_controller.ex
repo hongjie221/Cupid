@@ -19,17 +19,17 @@ defmodule CupidWeb.LikeController do
     like_from_id = conn.assigns[:current_user].id
     # check if the reverse realtion exist
     reverse_realtion = Likes.get_like(like_to_id, like_from_id)
-    IO.inspect reverse_realtion
+
     if reverse_realtion do
       # remove the reverse like realtion
       Likes.delete_like(reverse_realtion)
       # add to match
       Matches.create_match(%{user1_id: like_to_id, user2_id: like_from_id})
-      Notification.notify_success(like_from_id, 
-        "new_match", "A New Match", 
+      Notification.notify_success(like_from_id,
+        "new_match", "A New Match",
         "The person you are interested in is also interested in you, let's chat!")
-      Notification.notify_success(like_to_id, 
-        "new_match", "A New Match", 
+      Notification.notify_success(like_to_id,
+        "new_match", "A New Match",
         "A person you are interested in just liked interested in you, let's chat!")
       render(conn, "like_user.json", like: "")
     else

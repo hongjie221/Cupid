@@ -14,38 +14,40 @@ let socket = null;
 let channels = {};
 
 export function init_socket(session) {
-  socket = new Socket("/socket", {params: {token: session.token}})
-  socket.connect()
-  let channel = socket.channel("notification:"+session.user_id, {})
-channel.join()
-  .receive("ok", resp => { 
-    channels['notification'] = channel;
-    channel.on("new_match", data => {
-      store.dispatch({
-        type: 'NEW_MATCH',
-        data: data
-      });
-    });
-  })
-  .receive("error", resp => { console.log("Unable to join", resp) });
+    socket = new Socket("/socket", { params: { token: session.token } })
+    socket.connect()
+    let channel = socket.channel("notification:" + session.user_id, {})
+    channel.join()
+        .receive("ok", resp => {
+            channels['notification'] = channel;
+            channel.on("new_match", data => {
+                store.dispatch({
+                    type: 'NEW_MATCH',
+                    data: data
+                });
+            });
+        })
+        .receive("error", resp => { console.log("Unable to join", resp) });
 }
 
 export function init_channel(id, socket) {
-  let c = socket.channel("room:"+id, {});
-  c.join()
-    .receive("ok", resp => { 
-      channels[id] = c;
-      store.dispatch({
-        type: 'NEW_MSG',
-        data: {[id]: resp.mbox}
-      });
-    })
-    .receive("error", resp => { console.log(`Failed to joined room: ${id}! `, resp) });
+    let c = socket.channel("room:" + id, {});
+    c.join()
+        .receive("ok", resp => {
+            channels[id] = c;
+            store.dispatch({
+                type: 'NEW_MSG',
+                data: {
+                    [id]: resp.mbox }
+            });
+        })
+        .receive("error", resp => { console.log(`Failed to joined room: ${id}! `, resp) });
     c.on("new_msg", data => {
-      store.dispatch({
-        type: 'NEW_MSG',
-        data: {[id]: data.mbox}
-      });
+        store.dispatch({
+            type: 'NEW_MSG',
+            data: {
+                [id]: data.mbox }
+        });
     });
 }
 
@@ -94,4 +96,3 @@ export { socket, channels };
 //       end
 //     end
 //
-

@@ -20,14 +20,14 @@ defmodule CupidWeb.PhotoController do
         }
       end)
 
-    IO.inspect(photos)
+
     render(conn, "index.json", photos: photos)
   end
 
   def create(conn, %{"photo" => photo_params}) do
     # add current_user in photo parameters
     photo_params = Map.put(photo_params, "user_id", conn.assigns[:current_user].id)
-    IO.inspect(photo_params)
+
 
     with {:ok, %Photo{} = photo} <- Photos.create_photo(photo_params) do
       conn

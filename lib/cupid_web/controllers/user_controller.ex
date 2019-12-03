@@ -47,20 +47,16 @@ defmodule CupidWeb.UserController do
   end
 
   def update(conn, %{"id" => id, "latitude" => lan, "longitude" => lon}) do
-      IO.inspect("ppl nearby is empty")
-      IO.inspect("start testing update");
-      IO.inspect(lan);
-      IO.inspect(lon);
-      IO.inspect("end testing update");
+
       if is_float(lan) do
-        IO.inspect("hhh")
+
       end
 
       # get the location based on Lat and Lon through Google Geocode api
       addr = GeocodeApi.getLocation(%{:latitude => lan, :longitude => lon})
 
       with {:ok, %User{} = user} <- Users.update_user_lan_lon_by_id(id, lan, lon, addr) do
-        IO.inspect("updated the lan and lon");
+
         render(conn, "show.json", user: user)
       end
   end

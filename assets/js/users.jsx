@@ -69,7 +69,7 @@ class Users extends React.Component {
     let { info, user_index } = this.props;
 
     // db operation
-    console.log(info[user_index].user_id);
+    
     like_user(info[user_index].user_id);
     if (info.length <= user_index + 1) {
       this.setState({ errors: "This is the last recommended user" });
@@ -129,7 +129,7 @@ class Users extends React.Component {
       return <p>Loading</p>;
     }
 
-    console.log(latitude);
+    
 
     if (info === null) {
       get_recommendation();
@@ -155,8 +155,7 @@ class Users extends React.Component {
       error_msg = <Alert variant="danger">{this.state.errors}</Alert>;
     }
 
-    console.log(photo_index);
-    console.log(info)
+    
     let photo_info =
       current_photos.length === 0 ? "" : current_photos[photo_index].photo;
     let photo_desc =

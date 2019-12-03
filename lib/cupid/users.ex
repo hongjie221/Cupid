@@ -131,7 +131,7 @@ defmodule Cupid.Users do
 
   def get_user_by_radius(id) do
     curr_user = Repo.get_by(User, id: id)
-    IO.inspect(curr_user)
+
     curr_lan = Decimal.to_float(curr_user.lan)
     curr_lon = Decimal.to_float(curr_user.lon)
 

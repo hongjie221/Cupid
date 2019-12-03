@@ -53,7 +53,7 @@ export function get(path) {
 export function register(form) {
     let state = store.getState();
     let data = state.forms.signup;
-    console.log(data)
+
     post('/users', { 'user': data })
         .then((resp) => {
             if (resp.token) {
@@ -89,7 +89,7 @@ export function submit_login(form) {
                 });
                 form.redirect();
             } else {
-                console.log(resp.errors);
+
                 store.dispatch({
                     type: 'CHANGE_LOGIN',
                     data: { errors: resp.errors },
@@ -100,9 +100,9 @@ export function submit_login(form) {
 
 export function get_profile() {
     let id = JSON.parse(localStorage.getItem("session")).user_id;
-    console.log(id);
+
     get("/users/" + id).then(resp => {
-        console.log(resp.data);
+        (resp.data);
         store.dispatch({
             type: "SHOW_PROFILE",
             data: resp.data
@@ -114,9 +114,9 @@ export function change_profile_desc() {
     let id = JSON.parse(localStorage.getItem("session")).user_id;
     let state = store.getState();
     let data = { user: state.profile.desc };
-    console.log(data);
+
     put("/users/" + id, data).then(resp => {
-        console.log(resp);
+
         Object.assign(resp.data, { hint: "success" });
         store.dispatch({
             type: "SHOW_PROFILE",
@@ -126,12 +126,11 @@ export function change_profile_desc() {
 }
 
 export function change_location(lan, lon) {
-    console.log("change_location");
-    console.log(lan + "," + lon);
+
     let id = JSON.parse(localStorage.getItem("session")).user_id;
     let data = { latitude: lan, longitude: lon };
     put("/users/" + id, data).then(resp => {
-        console.log(resp);
+
         Object.assign(resp.data, {});
         store.dispatch({
             type: "Update_Location",
@@ -148,15 +147,15 @@ export function upload_photo(form) {
         return;
     }
 
-    if (data.new_photo.size >= 7500000) {
+    if (data.new_photo.size >= 1024000) {
         store.dispatch({
             type: "UPLOAD",
-            data: { errors: "Photo size is larger than 7MB" }
+            data: { errors: "Photo size is larger than 1MB" }
         });
     } else {
         let reader = new FileReader();
         reader.addEventListener("load", () => {
-            console.log("post photos");
+
             post("/photos", {
                 photo: {
                     desc: data.photo_desc,
@@ -175,10 +174,10 @@ export function upload_photo(form) {
 
 export function show_all_photos() {
     get("/photos").then(resp => {
-        console.log(resp);
+
         let photos = [];
         resp.data.map(x => photos.push(x));
-        console.log(photos);
+
         store.dispatch({
             type: "ALL_PHOTOS",
             data: {
@@ -190,7 +189,7 @@ export function show_all_photos() {
 
 export function show_all_matches() {
     get("/matches").then(resp => {
-        console.log(resp);
+
         store.dispatch({
             type: "MATCHES",
             data: {
@@ -203,7 +202,7 @@ export function show_all_matches() {
 export function load_ppl_nearby(lan, lon) {
     let id = JSON.parse(localStorage.getItem("session")).user_id;
     get("/users").then(resp => {
-        console.log(resp);
+
         store.dispatch({
             type: "MATCHES",
             data: {
@@ -215,7 +214,7 @@ export function load_ppl_nearby(lan, lon) {
 
 export function get_tags() {
     get("/tags").then(resp => {
-        console.log(resp);
+
         store.dispatch({
             type: "GET_TAGS",
             data: {
@@ -227,7 +226,7 @@ export function get_tags() {
 
 export function current_user_tags() {
     get("/interest").then(resp => {
-        console.log(resp.data);
+
         store.dispatch({
             type: "ADD_TAGS",
             data: { current_tag: resp.data }
@@ -237,7 +236,7 @@ export function current_user_tags() {
 
 export function get_my_interests() {
     get("/interest").then(resp => {
-        console.log(resp.data);
+
         store.dispatch({
             type: "SHOW_PROFILE",
             data: { my_interests: resp.data }
@@ -250,7 +249,7 @@ export function change_tags() {
     let added_tag = state.add_tags.added_tag;
     let current_user_tag = state.add_tags.current_tag;
     let current_user_tag_id = current_user_tag.map(x => x.tag_id);
-    console.log(current_user_tag_id);
+
     if (added_tag === null || added_tag.length === 0) {
         store.dispatch({
             type: "ADD_TAGS",
@@ -280,7 +279,7 @@ export function get_recommendation() {
         latitude: data.latitude,
         longitude: data.longitude
     }).then(resp => {
-        console.log(resp);
+
         store.dispatch({
             type: "USERS",
             data: {
@@ -304,7 +303,7 @@ export function get_my_interests_photo_by_id(id) {
 export function like_user(id) {
     post("/likes/", { like_to_id: id }).then(resp => {
         // do nothing
-        console.log(resp);
+
     });
 }
 
@@ -318,16 +317,16 @@ export function get_friends(socket) {
             });
             if (socket) {
                 // for each friend, initialize a channel
-                console.log(resp);
+
                 _.forEach(resp, (f) => {
                         init_channel(f.id, socket)
                     }
 
                 );
-                console.log(resp);
+
             }
         } else {
-            console.log(resp.errors)
+
         }
     });
 }
@@ -341,7 +340,7 @@ export function get_all_msg() {
                     data: resp
                 });
             } else {
-                console.log(resp.errors);
+
             }
         }
     );

@@ -36,7 +36,6 @@ class AddTag extends React.Component {
       type: "ADD_TAGS",
       data: { added_tag: data }
     });
-    console.log(data);
   }
 
   render() {

@@ -1,8 +1,6 @@
 /* This file is for your main application css. */
 
 @import "~bootstrap/scss/bootstrap";
-
-
 #profile_show_all_photos_button {
     margin-bottom: 20px;
     background-color: plum;
@@ -107,7 +105,6 @@
 }
 
 #image {
-    max-height: 500px;
     background-size: contain;
     resize: both;
 }
@@ -176,7 +173,6 @@ hr {
     font-weight: bold;
     text-align: center;
 }
-
 
 .profile {
     margin-bottom: 20px;
