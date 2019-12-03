@@ -148,10 +148,13 @@ function geolocation(st0 = { latitude: 0, longitude: 0 }, action) {
     }
 }
 // add or remove friends
+// format: {id： 1， user: {}}
 function friends(st0 = [], action) {
     switch (action.type) {
         case 'CHANGE_FRIENDS':
             return action.data;
+        case 'ADD_FRIEND':
+            return _.concat([action.data], st0);
         default:
             return st0;
     }

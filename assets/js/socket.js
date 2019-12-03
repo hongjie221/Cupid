@@ -14,6 +14,7 @@ let socket = null;
 let channels = {};
 
 export function init_socket(session) {
+
     socket = new Socket("/socket", { params: { token: session.token } })
     socket.connect()
     let channel = socket.channel("notification:" + session.user_id, {})
@@ -26,8 +27,16 @@ export function init_socket(session) {
                     data: data
                 });
             });
+            channel.on("add_friend", data => {
+                store.dispatch({
+                    type: 'ADD_FRIEND',
+                    data: data
+                });
+                init_channel(data.id, socket);
+            });
         })
         .receive("error", resp => { console.log("Unable to join", resp) });
+
 }
 
 export function init_channel(id, socket) {
@@ -38,7 +47,8 @@ export function init_channel(id, socket) {
             store.dispatch({
                 type: 'NEW_MSG',
                 data: {
-                    [id]: resp.mbox }
+                    [id]: resp.mbox
+                }
             });
         })
         .receive("error", resp => { console.log(`Failed to joined room: ${id}! `, resp) });
@@ -46,16 +56,17 @@ export function init_channel(id, socket) {
         store.dispatch({
             type: 'NEW_MSG',
             data: {
-                [id]: data.mbox }
+                [id]: data.mbox
+            }
         });
     });
 }
 
 export function leave() {
-  _.forEach(channels, (c) => {
-    c.leave();
-  });
-  channels = {};
+    _.forEach(channels, (c) => {
+        c.leave();
+    });
+    channels = {};
 }
 
 

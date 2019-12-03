@@ -173,10 +173,7 @@ let Session = (props) => {
     history.push('/');
   }
 
-  console.log('session\'s props', props);
-
   if (session) {
-    console.log('session', session);
     init_socket(session);
     get_friends(socket);
     return (
