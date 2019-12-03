@@ -151,11 +151,24 @@ function send_msg_enter(ev, id, text) {
 }
 
 function send_msg(id, text) {
-  channels[id].push("new_msg", { text: text });
-  store.dispatch({
-    type: "CHANGE_TEXT",
-    data: { text: "" }
-  });
+  let session = store.getState().session;
+  if (text.length > 0) {
+    channels[id].push("new_msg", { text: text, from: {name: session.user_name, id: session.user_id}});
+    store.dispatch({
+      type: "CHANGE_TEXT",
+      data: { text: "" }
+    });
+  } else {
+    store.dispatch({
+      type: "NOTI",
+      data: {
+        id: (new Date()).getTime(),
+        type: "danger",
+        headline: "No Input",
+        message: "Type something to send."
+      }
+    });
+  }
 }
 
 export default withRouter(

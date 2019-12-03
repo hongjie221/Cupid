@@ -51,6 +51,13 @@ export function init_channel(id, socket) {
     });
 }
 
+export function leave() {
+  _.forEach(channels, (c) => {
+    c.leave();
+  });
+  channels = {};
+}
+
 
 export { socket, channels };
 

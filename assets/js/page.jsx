@@ -5,6 +5,7 @@ import {
     Switch,
     Route,
     NavLink, Redirect, withRouter,
+    useHistory
 } from "react-router-dom";
 import { Navbar, Nav, Col } from "react-bootstrap";
 import { Provider, connect } from "react-redux";
@@ -23,7 +24,7 @@ import { FaHeartbeat, FaHome, FaRegUser, FaRegComment } from "react-icons/fa";
 import Community from "./community"
 import DebugRouter from "./debug_router"
 import { get_friends } from "./ajax"
-import { init_socket, socket, channels } from "./socket";
+import { init_socket, socket, channels, leave } from "./socket";
 import { AlertList, Alert, AlertContainer } from "react-bs-notifier";
 
 
@@ -39,6 +40,8 @@ export default function init_page(root) {
 
 
 function Page(props) {
+
+
   return (
     <Router>
       <Navbar bg="light" variant="primary">
@@ -81,7 +84,7 @@ function Page(props) {
           </Nav>
         </Col>
         <Col md="2">
-          <Session />
+          <SessionWithRouter />
         </Col>
       </Navbar>
       <Alter />
@@ -158,19 +161,22 @@ function PrivateRoute({ children, ...rest }) {
     );
 }
 
-
-let Session = withRouter(connect(({session}) => ({session}))(({session, dispatch, history}) => {
+let Session = (props) => {
+  let {session, dispatch, history} = props;
   function logout(ev) {
     ev.preventDefault();
     localStorage.removeItem('session');
+    leave();
     dispatch({
       type: 'LOG_OUT',
     });
     history.push('/');
   }
 
+  console.log('session\'s props', props);
 
   if (session) {
+    console.log('session', session);
     init_socket(session);
     get_friends(socket);
     return (
@@ -195,7 +201,15 @@ let Session = withRouter(connect(({session}) => ({session}))(({session, dispatch
       </Nav>
     );
   }
-}));
+};
+
+function areEqual(prevProps, nextProps) {
+  return true;
+}
+
+let connectSession = connect(({session}) => ({session}))(Session);
+
+let SessionWithRouter = withRouter(React.memo(connectSession, areEqual));
 
 let Alter = connect(({ noti }) => ({ noti }))(({ noti, dispatch }) => {
 

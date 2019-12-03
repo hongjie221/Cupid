@@ -130,6 +130,7 @@ if (session0) {
 function session(st0 = session0, action) {
     switch (action.type) {
         case 'LOG_IN':
+                console.log(action);
             return action.data;
         case 'LOG_OUT':
             return null;
@@ -173,10 +174,12 @@ function noti(st0 = [], action) {
             let alt = {
                 id: (new Date()).getTime(),
                 type: action.data.type,
-                headline: action.data.type,
+                headline: action.data.headline,
                 message: action.data.message
               };
             return _.concat(st0, alt);
+        case 'NOTI':
+            return _.concat(st0, action.data);
         case 'REMOVE_ALT':
             return _.filter(st0, (n) => (n.id !== action.data.id));
         default:
